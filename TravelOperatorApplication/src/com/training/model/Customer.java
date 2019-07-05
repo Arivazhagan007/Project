@@ -1,7 +1,5 @@
 package com.training.model;
 
-import java.math.BigInteger;
-
 public class Customer {
 
 	private int customerId;

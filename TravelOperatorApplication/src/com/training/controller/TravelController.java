@@ -1,7 +1,5 @@
 package com.training.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -11,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.training.SqlConnection;
 import com.training.daos.DaoImpl;
+import com.training.factory.Factory;
 import com.training.iface.Command;
 
 /**
@@ -66,19 +65,24 @@ public class TravelController extends HttpServlet {
 	
 	protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		
+		
 		String uriPath = request.getRequestURI();
 		String[] uriSplit = uriPath.split("/");
 		String classPackageName = properties.getProperty(uriSplit[uriSplit.length-1]);
+		Command command = Factory.getClass(classPackageName);
+		String responsePath = command.execute(request, dao);
+		RequestDispatcher dispatcher = request.getRequestDispatcher(responsePath);
+		dispatcher.forward(request, response);
 		
-		try {
-			Class class1 = Class.forName(classPackageName);
-			Command command = (Command) class1.newInstance();
-			String responsePath = command.execute(request, dao);
-			RequestDispatcher dispatcher = request.getRequestDispatcher(responsePath);
-			dispatcher.forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+//		try {
+//			Class class1 = Class.forName(classPackageName);
+//			Command command = (Command) class1.newInstance();
+//			String responsePath = command.execute(request, dao);
+//			RequestDispatcher dispatcher = request.getRequestDispatcher(responsePath);
+//			dispatcher.forward(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}		
 	}
 
 }

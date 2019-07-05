@@ -26,5 +26,7 @@ public class CustomerLogin implements Command{
 		dao.customerLoginValidate(customer);
 		return successURI;
 	}
+	
+	
 
 }
